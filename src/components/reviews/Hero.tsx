@@ -69,7 +69,7 @@ export function Hero() {
   const primaryRaw = useCSSVar("--primary");
 
   const palette = useMemo(() => {
-    const ch = primaryRaw ? oklchChannels(primaryRaw) : "0.50 0.30 250";
+    const ch = primaryRaw ? oklchChannels(primaryRaw) : "0.46 0.312 262";
     if (isDark) {
       return {
         gradientFrom: `oklch(${ch} / 0.55)`,
