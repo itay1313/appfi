@@ -1,111 +1,146 @@
-# ReviewScope — ChatGPT iOS Reviews Explorer
+<div align="center">
 
-A web application for exploring and filtering user reviews of the ChatGPT iOS app, built as part of the Appfigures React Development Challenge.
+<br />
 
-## Quick Start
+<img src="https://img.shields.io/badge/✦-ItayReview-7c3aed?style=for-the-badge&labelColor=0f0f0f" alt="ItayReview" />
+
+<br /><br />
+
+# ItayReview
+
+### *Where reviews meet insight ✦*
+
+A beautifully crafted explorer for **345,000+** ChatGPT iOS App Store reviews.  
+Search, filter by language & rating, and surface real user insights — fast.
+
+<br />
+
+[![React](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite_8-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=flat-square&logo=reactquery&logoColor=white)](https://tanstack.com/query)
+
+<br />
+
+</div>
+
+---
+
+## ✦ Overview
+
+ItayReview is a fast, modern web app for exploring App Store reviews of the ChatGPT iOS app. Whether you're doing competitive research, tracking sentiment, or just curious what users are saying — every review is one search away.
+
+Built with a focus on **performance**, **polish**, and **developer craft**.
+
+---
+
+## ✨ Features
+
+| | Feature | Details |
+|---|---|---|
+| 🔍 | **Smart Search** | Debounced full-text search with instant clear |
+| 🌍 | **Language Filter** | 17 languages with flag + name — custom dropdown matching the search input height exactly |
+| ⭐ | **Star Rating Pills** | One-click 1–5 star filters with active highlight states |
+| 📅 | **Date Grouping** | Reviews bucketed into Today / This Week / Last Month / … |
+| ♾️ | **Infinite Pagination** | Load More with live "showing X of Y" count |
+| 🌑 | **Dark / Light / System** | Theme driven entirely by CSS custom properties — zero flicker |
+| 💫 | **Interactive Hero** | Cursor-reactive dot-field animation that responds in real time |
+| 🦴 | **Skeleton Loaders** | Every loading state has a pixel-matched placeholder |
+| ⚠️ | **Graceful Errors** | Error boundaries, retry buttons, and silent fallbacks for invalid URL params |
+
+---
+
+## 🛠️ Tech Stack
+
+```
+React 19            UI framework with modern hooks API
+TypeScript          End-to-end type safety
+Vite 8              Sub-second HMR, native ESM bundling
+Tailwind CSS v4     CSS-native engine — no config file needed
+Base UI (MUI)       Headless, accessible primitives (Menu, Select, …)
+TanStack Query      Infinite pagination, caching, automatic abort
+React Router v7     URL-driven filter state — filters survive refresh
+Framer Motion       Smooth animations
+Plus Jakarta Sans   Variable-weight geometric sans-serif
+```
+
+---
+
+## 🚀 Getting Started
 
 ```bash
+# Clone
+git clone https://github.com/itay1313/appfi.git
+cd appfi
+
+# Install
 npm install
+
+# Develop
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open **[http://localhost:5173](http://localhost:5173)** — you're live.
 
-## Tech Stack
+```bash
+npm run build      # Type-check + production build
+npm run preview    # Preview the production build
+npm run lint       # ESLint
+```
 
-| Layer | Choice | Rationale |
-|-------|--------|-----------|
-| **Framework** | React 19 + TypeScript | Type safety, modern hooks API |
-| **Build** | Vite | Fast HMR, native ESM, zero-config TS |
-| **Styling** | Tailwind CSS v4 + shadcn/ui | Utility-first CSS with a composable component library. Tailwind v4 uses the new CSS-native engine — no config file needed |
-| **Data fetching** | TanStack Query (React Query) | Declarative server-state management with built-in caching, infinite pagination, request deduplication, and automatic abort signals |
-| **Routing** | React Router v7 | URL state sync, browser history support |
-| **Validation** | Zod | Runtime validation of URL parameters — invalid values fall back to defaults silently |
-| **Fonts** | Plus Jakarta Sans | Bold, geometric variable-weight sans-serif — high readability with personality |
+---
 
-## Architecture
+## 📁 Project Structure
 
 ```
 src/
-├── api/              # API client layer
-│   └── reviews.ts    # Fetch wrapper with typed responses and error handling
-├── app/
-│   ├── Providers.tsx  # Composition root (ThemeProvider, QueryClient, Router)
-│   └── ErrorBoundary.tsx
+├── app/                     Providers, ErrorBoundary
 ├── components/
-│   ├── layout/       # App shell (Header, theme toggle, background)
-│   ├── reviews/      # Feature components (SearchFilters, ReviewCard, ReviewList, etc.)
-│   └── ui/           # shadcn/ui primitives (Button, Input, Select, Skeleton, etc.)
+│   ├── layout/              Header · Footer · BackgroundCanvas
+│   ├── reviews/             Hero · SearchFilters · ReviewCard · ReviewList · …
+│   └── ui/                  Design-system primitives (Button, Input, Dropdown, …)
 ├── hooks/
-│   ├── use-reviews.ts        # TanStack infinite query for paginated data
-│   ├── use-review-filters.ts # URL ↔ filter state sync via search params
-│   └── use-theme.ts          # Light/dark/system theme context
-├── lib/
-│   ├── date-groups.ts  # Pure date bucketing logic for review sections
-│   ├── languages.ts    # ISO 639-1 helpers for language filtering
-│   └── utils.ts        # cn() utility for class merging
-├── types/
-│   └── review.ts       # Shared TypeScript interfaces
-├── App.tsx             # Root with Routes
-└── main.tsx            # Entry point
+│   ├── use-reviews.ts       TanStack infinite query + pagination
+│   ├── use-review-filters.ts URL ↔ filter state via URLSearchParams
+│   └── use-theme.ts         Light / dark / system theme context
+└── lib/
+    ├── date-groups.ts       Pure date bucketing logic
+    ├── languages.ts         ISO 639-1 helpers + flag emojis
+    └── utils.ts             cn() class merger
 ```
 
-### Key Design Decisions
+---
 
-**1. Separation of concerns via custom hooks**
+## 🎨 Design Decisions
 
-All stateful logic lives in hooks (`useReviews`, `useReviewFilters`, `useTheme`), keeping components purely presentational. This makes each piece independently testable and swappable.
+**URL-driven state** — filters live in `URLSearchParams`. Every filter change is shareable, survives refresh, and works with browser back/forward.
 
-**2. URL-driven state**
+**Custom language dropdown** — the shadcn `Select` hardcodes `data-[size=default]:h-8` via data-attribute styles that override className. Replaced with a headless `DropdownMenu` trigger for a pixel-perfect `h-11` match with the search input.
 
-Filters are the single source of truth via `URLSearchParams`. The `useReviewFilters` hook reads/writes search params, which means:
-- Filters survive page refresh
-- Browser back/forward works naturally (each filter change pushes history)
-- Views are shareable via URL
-- Invalid params are validated with Zod and fall back to defaults silently
+**Debounced search** — 400ms debounce fires the URL update and API call while the local input state updates immediately, keeping the UI snappy.
 
-**3. Debounced search input**
+**Append-based pagination** — "Load More" accumulates reviews and date groups are recomputed from the full array, so new reviews slot into the correct sections automatically.
 
-The search input debounces user keystrokes (400ms) before updating the URL and triggering a fetch. This avoids hammering the API on every keystroke while keeping the UI responsive. The local input state updates immediately for a snappy feel.
+**oklch color system** — the theme palette uses perceptually uniform lightness so accent colours look equally vibrant in light and dark modes without manual tweaking.
 
-**4. TanStack Query for server state**
+---
 
-Reviews are fetched with `useInfiniteQuery`, which provides:
-- Automatic request cancellation via `AbortSignal` when filters change (prevents stale responses from overwriting newer results)
-- Built-in caching and deduplication — switching back to previous filters is instant
-- `keepPreviousData` for smooth UX: the previous results stay visible while new ones load
-- Infinite pagination with `getNextPageParam` / `fetchNextPage`
+## 🌐 Browser Support
 
-**5. Date grouping as a pure utility**
+Targets modern evergreen browsers (Chrome, Firefox, Safari, Edge — latest).  
+Uses native CSS nesting, `oklch()`, `dvh` units, and `backdrop-filter`.
 
-`groupReviewsByDate()` is a pure function that takes an array of reviews and returns labeled groups. The bucketing logic (Today, Yesterday, This Week, Last Week, This Month, then monthly intervals) is computed from the current date and applied without mutation. Empty groups are omitted.
+---
 
-**6. Append-based pagination**
+## 👤 Author
 
-"Load More" appends to the existing review list rather than replacing it. Groups are recomputed from the full accumulated array, so reviews naturally slot into the correct date sections as more pages load.
+Built with ♥ by **[itaycode.com](https://itaycode.com)**
 
-**7. Tailwind CSS v4 with oklch color system**
+---
 
-The theme uses oklch colors for perceptually uniform lightness across the palette. Light and dark themes are controlled via a `.dark` class on `<html>`, toggled by the theme context which respects system preference and persists to localStorage.
+<div align="center">
 
-**8. Layered error handling**
+*✦ ItayReview — Where reviews meet insight*
 
-Every expected failure path is handled:
-- Network errors surface a retry button via `ErrorState`
-- HTTP errors throw typed `ApiError` instances distinguishing 4xx vs 5xx
-- Aborted requests (from filter changes mid-flight) are silently ignored by TanStack Query
-- Invalid URL params fall back to defaults via Zod schemas
-- Render-time crashes are caught by the top-level `ErrorBoundary`
-
-## Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server |
-| `npm run build` | Type-check + production build |
-| `npm run preview` | Preview production build |
-| `npm run lint` | ESLint |
-
-## Browser Support
-
-Targets modern browsers (latest Chrome, Firefox, Safari, Edge). Uses native CSS nesting, oklch colors, and `dvh` units.
+</div>
