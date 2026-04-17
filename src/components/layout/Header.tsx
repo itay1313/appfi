@@ -1,4 +1,5 @@
 import { Sun, Moon, Monitor } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/use-theme";
 import {
   DropdownMenu,
@@ -13,29 +14,31 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              className="size-4.5"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <Link to="/" className="group flex items-center gap-3">
+          {/* Logo mark */}
+          <div className="relative flex size-9 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
+            <svg viewBox="0 0 24 24" className="size-5 text-primary-foreground" fill="none">
+              {/* Star / sparkle shape */}
+              <path
+                d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
+                fill="currentColor"
+                opacity="0.9"
+              />
+              <circle cx="19" cy="5" r="1.5" fill="currentColor" opacity="0.6" />
+              <circle cx="5" cy="19" r="1" fill="currentColor" opacity="0.4" />
             </svg>
           </div>
+
+          {/* Brand text */}
           <div className="flex flex-col">
-            <span className="text-[15px] font-bold leading-tight tracking-tight text-foreground">
-              ReviewScope
+            <span className="text-[15px] font-extrabold leading-tight tracking-tight text-foreground">
+              ItayReview
             </span>
-            <span className="text-[11px] font-medium leading-tight text-muted-foreground">
-              ChatGPT iOS Reviews
+            <span className="text-[10.5px] font-medium leading-tight text-muted-foreground">
+              Where reviews meet insight ✦
             </span>
           </div>
-        </div>
+        </Link>
 
         <DropdownMenu>
           <DropdownMenuTrigger className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
