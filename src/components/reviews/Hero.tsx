@@ -1,5 +1,46 @@
+import { useMemo, useEffect, useState } from "react";
 import { DotField } from "@/components/ui/DotField";
 import { useTheme } from "@/hooks/use-theme";
+
+/**
+ * Reads a CSS custom property from :root and re-fires whenever the
+ * theme class changes (i.e. dark ↔ light toggle).
+ */
+function useCSSVar(token: string): string {
+  const [value, setValue] = useState(() =>
+    typeof document !== "undefined"
+      ? getComputedStyle(document.documentElement)
+          .getPropertyValue(token)
+          .trim()
+      : ""
+  );
+
+  useEffect(() => {
+    const update = () =>
+      setValue(
+        getComputedStyle(document.documentElement)
+          .getPropertyValue(token)
+          .trim()
+      );
+    const mo = new MutationObserver(update);
+    mo.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => mo.disconnect();
+  }, [token]);
+
+  return value;
+}
+
+/** Strips wrapper and alpha from an oklch() string → bare "L C H" channels */
+function oklchChannels(raw: string): string {
+  return raw
+    .replace(/^oklch\(\s*/, "")
+    .replace(/\s*\)$/, "")
+    .replace(/\s*\/\s*[\d.]+$/, "")
+    .trim();
+}
 
 const CHATGPT_ICON_DARK = (
   <svg viewBox="0 0 512 512" className="size-12 sm:size-14" fill="none">
@@ -21,24 +62,29 @@ const CHATGPT_ICON_LIGHT = (
   </svg>
 );
 
-const DARK_DOTS = {
-  gradientFrom: "rgba(168, 85, 247, 0.5)",
-  gradientTo: "rgba(140, 120, 200, 0.35)",
-  glowColor: "#1a1525",
-  bg: "bg-[#0c0a12]",
-} as const;
-
-const LIGHT_DOTS = {
-  gradientFrom: "rgba(60, 60, 70, 0.1)",
-  gradientTo: "rgba(90, 90, 100, 0.2)",
-  glowColor: "#ffffff",
-  bg: "bg-[#f5f5f7]",
-} as const;
-
 export function Hero() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-  const palette = isDark ? DARK_DOTS : LIGHT_DOTS;
+
+  const primaryRaw = useCSSVar("--primary");
+
+  const palette = useMemo(() => {
+    const ch = primaryRaw ? oklchChannels(primaryRaw) : "0.50 0.30 250";
+    if (isDark) {
+      return {
+        gradientFrom: `oklch(${ch} / 0.55)`,
+        gradientTo:   `oklch(${ch} / 0.28)`,
+        glowColor:    "#0e0c18",
+        bg:           "bg-[#08070f]",
+      };
+    }
+    return {
+      gradientFrom: `oklch(${ch} / 0.22)`,
+      gradientTo:   `oklch(${ch} / 0.10)`,
+      glowColor:    "#ffffff",
+      bg:           "bg-[#f4f4f8]",
+    };
+  }, [isDark, primaryRaw]);
 
   return (
     <section className={`relative overflow-hidden ${palette.bg}`}>
