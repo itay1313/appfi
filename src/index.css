@@ -8,22 +8,22 @@
 /* ─────────────────────────────────────────────────────────────────────────
    COLOR SCALES
    Raw stops are defined here so you can reference them anywhere.
-   Hue 262 = Electric Indigo  |  Hue 255 = Cool Slate (neutral)
+   Hue 33 = Flame Orange-Red (#ff3600)  |  Hue 255 = Cool Slate (neutral)
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* == Indigo (Primary scale) — hue 262, electric blue-indigo == */
-  --indigo-50:  oklch(0.97 0.018 262);
-  --indigo-100: oklch(0.93 0.052 262);
-  --indigo-200: oklch(0.87 0.098 262);
-  --indigo-300: oklch(0.78 0.158 262);
-  --indigo-400: oklch(0.66 0.222 262);
-  --indigo-500: oklch(0.54 0.285 262);
-  --indigo-600: oklch(0.46 0.312 262);   /* ← light mode primary (7:1 on white ✓) */
-  --indigo-700: oklch(0.38 0.272 262);
-  --indigo-800: oklch(0.28 0.205 262);
-  --indigo-900: oklch(0.19 0.132 262);
-  --indigo-950: oklch(0.12 0.080 262);
+  /* == Flame (Primary scale) — hue 33, vivid orange-red (#ff3600) == */
+  --indigo-50:  oklch(0.97 0.015 33);
+  --indigo-100: oklch(0.94 0.040 33);
+  --indigo-200: oklch(0.88 0.085 33);
+  --indigo-300: oklch(0.79 0.145 33);
+  --indigo-400: oklch(0.72 0.200 33);
+  --indigo-500: oklch(0.68 0.225 33);
+  --indigo-600: oklch(0.648 0.241 33);   /* ← #ff3600 — light mode primary */
+  --indigo-700: oklch(0.55 0.210 33);
+  --indigo-800: oklch(0.42 0.165 33);
+  --indigo-900: oklch(0.29 0.110 33);
+  --indigo-950: oklch(0.19 0.068 33);
 
   /* == Slate (Neutral scale) — cool blue-grey undertone == */
   --slate-50:  oklch(0.985 0.002 255);
@@ -157,7 +157,7 @@
   --muted:               var(--slate-100);
   --muted-foreground:    var(--slate-500);
 
-  /* Accent tinted with indigo */
+  /* Accent tinted with flame orange */
   --accent:              var(--indigo-50);
   --accent-foreground:   var(--indigo-700);
 
@@ -210,7 +210,7 @@
   --muted:               oklch(0.205 0.022 255);
   --muted-foreground:    var(--slate-400);
 
-  --accent:              oklch(0.225 0.038 262);
+  --accent:              oklch(0.225 0.038 33);
   --accent-foreground:   var(--indigo-300);
 
   --destructive:         oklch(0.704 0.191 22.216);
@@ -233,7 +233,7 @@
   --sidebar-foreground:         var(--slate-50);
   --sidebar-primary:            var(--indigo-400);
   --sidebar-primary-foreground: var(--slate-950);
-  --sidebar-accent:             oklch(0.225 0.038 262);
+  --sidebar-accent:             oklch(0.225 0.038 33);
   --sidebar-accent-foreground:  var(--indigo-300);
   --sidebar-border:             oklch(0.248 0.018 255);
   --sidebar-ring:               var(--indigo-400);
