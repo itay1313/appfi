@@ -1,12 +1,6 @@
 import { StarRating } from "./StarRating";
-
-interface ReviewCardProps {
-  title: string;
-  body: string;
-  author: string;
-  stars: number;
-  date: string;
-}
+import { ReviewModal } from "./ReviewModal";
+import type { Review } from "@/types/review";
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -17,29 +11,37 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export function ReviewCard({ title, body, author, stars, date }: ReviewCardProps) {
+interface ReviewCardProps {
+  review: Review;
+}
+
+export function ReviewCard({ review }: ReviewCardProps) {
+  const stars = Math.round(Number(review.stars));
+
   return (
-    <article className="group rounded-2xl border border-border/50 bg-card p-5 shadow-xs transition-all duration-200 hover:border-border hover:shadow-sm">
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="flex-1 space-y-1.5">
-          <StarRating rating={stars} size="sm" />
-          <h3 className="text-[15px] font-bold leading-snug tracking-tight text-foreground">
-            {title || "No title"}
-          </h3>
+    <ReviewModal review={review}>
+      <article className="group cursor-pointer rounded-2xl border border-border/50 bg-card p-5 shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-px">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div className="flex-1 space-y-1.5">
+            <StarRating rating={stars} size="sm" />
+            <h3 className="text-[15px] font-bold leading-snug tracking-tight text-foreground group-hover:text-primary transition-colors">
+              {review.title || "No title"}
+            </h3>
+          </div>
         </div>
-      </div>
 
-      {body && (
-        <p className="mb-4 text-[13.5px] leading-relaxed text-muted-foreground">
-          {body}
-        </p>
-      )}
+        {review.review && (
+          <p className="mb-4 line-clamp-3 text-[13.5px] leading-relaxed text-muted-foreground">
+            {review.review}
+          </p>
+        )}
 
-      <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
-        <span className="font-medium text-muted-foreground">{author}</span>
-        <span className="text-border">·</span>
-        <time dateTime={date}>{formatDate(date)}</time>
-      </div>
-    </article>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
+          <span className="font-medium text-muted-foreground">{review.author}</span>
+          <span className="text-border">·</span>
+          <time dateTime={review.date}>{formatDate(review.date)}</time>
+        </div>
+      </article>
+    </ReviewModal>
   );
 }

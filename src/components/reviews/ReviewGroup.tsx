@@ -22,11 +22,7 @@ export function ReviewGroup({ group }: ReviewGroupProps) {
         {group.reviews.map((review) => (
           <ReviewCard
             key={review.id}
-            title={review.title}
-            body={review.review}
-            author={review.author}
-            stars={Math.round(Number(review.stars))}
-            date={review.date}
+            review={review}
           />
         ))}
       </div>
