@@ -56,6 +56,8 @@ function CopyButton({ text }: { text: string }) {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
+    }).catch(() => {
+      // Clipboard unavailable (non-HTTPS, permission denied) — fail silently.
     });
   };
   return (

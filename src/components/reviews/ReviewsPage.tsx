@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import { useReviewFilters } from "@/hooks/use-review-filters";
 import { useReviews } from "@/hooks/use-reviews";
+import { useReviewStats } from "@/hooks/use-review-stats";
 import { groupReviewsByDate } from "@/lib/date-groups";
 import { primaryLanguage } from "@/lib/languages";
 import { Hero } from "./Hero";
 import { SearchFilters } from "./SearchFilters";
 import { TotalsLabel } from "./TotalsLabel";
+import { InsightsBar } from "./InsightsBar";
 import { ReviewList } from "./ReviewList";
 import { ReviewsSkeleton } from "./ReviewsSkeleton";
 import { ErrorState } from "./ErrorState";
@@ -25,6 +27,7 @@ export function ReviewsPage() {
     reviews,
     total,
     isInitialLoading,
+    isFetching,
     isFetchingNextPage,
     hasNextPage,
     error,
@@ -32,8 +35,10 @@ export function ReviewsPage() {
     retry,
   } = useReviews(filters, effectiveSort);
 
+  const stats = useReviewStats();
+
   // Client-side language filter: the API doesn't support filtering by
-  // predicted_langs, so we do it after the response arrives.
+  // predicted_langs, so we filter after the response arrives.
   const filteredReviews = useMemo(() => {
     if (!filters.lang) return reviews;
     return reviews.filter(
@@ -49,46 +54,60 @@ export function ReviewsPage() {
   return (
     <>
       <Hero />
-      <main className="mx-auto w-full max-w-5xl px-6 py-8">
+      {/* ── Fix: <div> not <main> — App.tsx already renders the <main> wrapper ── */}
+      <div className="mx-auto w-full max-w-5xl px-6 py-8">
 
-      <div className="mb-6">
-        <SearchFilters
-          query={filters.q ?? ""}
-          stars={filters.stars}
-          lang={filters.lang}
-          onQueryChange={setQuery}
-          onStarsChange={setStars}
-          onLangChange={setLang}
-        />
-      </div>
+        {/* Insights panel */}
+        <InsightsBar stats={stats} reviews={reviews} />
 
-      <div className="mb-6">
-        <TotalsLabel
-          total={total}
-          isLoading={isInitialLoading}
-          hasFilters={hasActiveFilters}
-        />
-      </div>
+        {/* Filters */}
+        <div className="mb-4">
+          <SearchFilters
+            query={filters.q ?? ""}
+            stars={filters.stars}
+            lang={filters.lang}
+            onQueryChange={setQuery}
+            onStarsChange={setStars}
+            onLangChange={setLang}
+          />
+        </div>
 
-      {error ? (
-        <ErrorState message={error} onRetry={() => retry()} />
-      ) : isInitialLoading ? (
-        <ReviewsSkeleton />
-      ) : (
-        <>
-          <ReviewList groups={groups} />
-          <div className="mt-8">
-            <LoadMoreButton
-              onClick={() => loadMore()}
-              isLoading={isFetchingNextPage}
-              hasMore={hasNextPage}
-              loadedCount={filteredReviews.length}
-              total={total}
-            />
+        {/* Refetch indicator (filter changed, keepPreviousData showing old results) */}
+        {isFetching && !isInitialLoading && !isFetchingNextPage && (
+          <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="inline-block size-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            Updating results…
           </div>
-        </>
-      )}
-      </main>
+        )}
+
+        {/* Totals */}
+        <div className="mb-6">
+          <TotalsLabel
+            total={total}
+            isLoading={isInitialLoading}
+            hasFilters={hasActiveFilters}
+          />
+        </div>
+
+        {error ? (
+          <ErrorState message={error} onRetry={retry} />
+        ) : isInitialLoading ? (
+          <ReviewsSkeleton />
+        ) : (
+          <>
+            <ReviewList groups={groups} />
+            <div className="mt-8">
+              <LoadMoreButton
+                onClick={loadMore}
+                isLoading={isFetchingNextPage}
+                hasMore={hasNextPage}
+                loadedCount={filteredReviews.length}
+                total={total}
+              />
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 }

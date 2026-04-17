@@ -123,6 +123,7 @@ export function SearchFilters({
           <Input
             type="text"
             placeholder="Search reviews…"
+            aria-label="Search reviews"
             value={localQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
             className="h-11 rounded-xl border-border/70 bg-surface-elevated pl-10 pr-10 text-sm shadow-xs transition-shadow placeholder:text-muted-foreground/60 focus-visible:shadow-md focus-visible:ring-primary/30"
@@ -142,6 +143,7 @@ export function SearchFilters({
 
         <DropdownMenu>
           <DropdownMenuTrigger
+            aria-label="Filter by language"
             className={cn(
               "inline-flex h-11 w-full items-center justify-between gap-2 rounded-xl border border-border/70 bg-surface-elevated px-3.5 text-sm shadow-xs transition-colors outline-none",
               "hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30",
@@ -205,6 +207,7 @@ export function SearchFilters({
 
         <button
           type="button"
+          aria-pressed={!activeRating}
           onClick={() => onStarsChange(undefined)}
           className={cn(
             "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-all",
@@ -222,6 +225,8 @@ export function SearchFilters({
             <button
               key={n}
               type="button"
+              aria-pressed={isActive}
+              aria-label={`Filter by ${n} star${n === 1 ? "" : "s"}`}
               onClick={() => onStarsChange(isActive ? undefined : String(n))}
               className={cn(
                 "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-all",
