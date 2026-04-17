@@ -24,9 +24,11 @@ export function Footer() {
             strokeWidth={2.5}
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <path d="M7 17L17 7M7 7h10v10" />
           </svg>
+          <span className="sr-only">(opens in a new tab)</span>
         </a>
       </div>
     </footer>

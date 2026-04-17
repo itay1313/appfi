@@ -13,6 +13,7 @@ export function ReviewList({ groups }: ReviewListProps) {
           <svg
             viewBox="0 0 24 24"
             fill="none"
+            aria-hidden="true"
             className="size-7 text-muted-foreground"
             stroke="currentColor"
             strokeWidth={1.5}

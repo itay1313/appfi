@@ -102,6 +102,20 @@ export const DotField = memo(function DotField({
     const ctx = canvas.getContext("2d", { alpha: true })!;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+    let cachedGrad: CanvasGradient | null = null;
+    let cachedGradKey = "";
+
+    function getGradient(w: number, h: number, from: string, to: string) {
+      const key = `${w}:${h}:${from}:${to}`;
+      if (key !== cachedGradKey) {
+        cachedGrad = ctx.createLinearGradient(0, 0, w, h);
+        cachedGrad.addColorStop(0, from);
+        cachedGrad.addColorStop(1, to);
+        cachedGradKey = key;
+      }
+      return cachedGrad!;
+    }
+
     function setup(w: number, h: number) {
       if (w === 0 || h === 0) return;
       canvas!.width = w * dpr;
@@ -116,6 +130,7 @@ export const DotField = memo(function DotField({
         offsetX: rect.left + window.scrollX,
         offsetY: rect.top + window.scrollY,
       };
+      cachedGradKey = "";
       buildDots(w, h);
     }
 
@@ -155,8 +170,30 @@ export const DotField = memo(function DotField({
       m.prevY = m.y;
     }
 
-    const speedInterval = setInterval(updateMouseSpeed, 20);
+    const speedInterval = setInterval(updateMouseSpeed, 100);
     let frameCount = 0;
+    let isSettled = false;
+    let idleFrames = 0;
+
+    function drawStaticFrame() {
+      const dots = dotsRef.current;
+      const { w, h } = sizeRef.current;
+      const p = propsRef.current;
+      const len = dots.length;
+      if (len === 0) return;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = getGradient(w, h, p.gradientFrom, p.gradientTo);
+      const rad = p.dotRadius / 2;
+
+      ctx.beginPath();
+      for (let i = 0; i < len; i++) {
+        const d = dots[i];
+        ctx.moveTo(d.ax + rad, d.ay);
+        ctx.arc(d.ax, d.ay, rad, 0, TWO_PI);
+      }
+      ctx.fill();
+    }
 
     function tick() {
       frameCount++;
@@ -177,6 +214,21 @@ export const DotField = memo(function DotField({
       if (engagement.current < 0.001) engagement.current = 0;
       const eng = engagement.current;
 
+      if (eng < 0.001 && p.waveAmplitude === 0) {
+        idleFrames++;
+        if (idleFrames > 30) {
+          if (!isSettled) {
+            drawStaticFrame();
+            isSettled = true;
+          }
+          rafRef.current = requestAnimationFrame(tick);
+          return;
+        }
+      } else {
+        idleFrames = 0;
+        isSettled = false;
+      }
+
       glowOpacity.current += (eng - glowOpacity.current) * 0.08;
       if (glowEl) {
         glowEl.setAttribute("cx", String(m.x));
@@ -185,10 +237,7 @@ export const DotField = memo(function DotField({
       }
 
       ctx.clearRect(0, 0, w, h);
-      const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, p.gradientFrom);
-      grad.addColorStop(1, p.gradientTo);
-      ctx.fillStyle = grad;
+      ctx.fillStyle = getGradient(w, h, p.gradientFrom, p.gradientTo);
 
       const cr = p.cursorRadius;
       const crSq = cr * cr;
@@ -257,9 +306,6 @@ export const DotField = memo(function DotField({
       rafRef.current = requestAnimationFrame(tick);
     }
 
-    // Use ResizeObserver to detect when the container actually has dimensions,
-    // which is more reliable than reading getBoundingClientRect on mount for
-    // absolutely-positioned containers that inherit height from siblings.
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
@@ -271,12 +317,51 @@ export const DotField = memo(function DotField({
     ro.observe(container);
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
-    rafRef.current = requestAnimationFrame(tick);
+
+    let animating = false;
+
+    const startAnimation = () => {
+      if (animating) return;
+      animating = true;
+      drawStaticFrame();
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const pauseAnimation = () => {
+      animating = false;
+      cancelAnimationFrame(rafRef.current);
+    };
+
+    // Pause when the browser tab is hidden → restores main-thread budget.
+    const onVisibilityChange = () => {
+      if (document.hidden) pauseAnimation();
+      else startAnimation();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    // Pause when the hero scrolls out of view → saves CPU on long pages.
+    const io = new IntersectionObserver(
+      ([entry]) => { entry.isIntersecting ? startAnimation() : pauseAnimation(); },
+      { threshold: 0 }
+    );
+    io.observe(container);
+
+    let cancelIdle: () => void;
+    if (typeof requestIdleCallback !== "undefined") {
+      const idleId = requestIdleCallback(startAnimation);
+      cancelIdle = () => cancelIdleCallback(idleId);
+    } else {
+      const timerId = setTimeout(startAnimation, 200);
+      cancelIdle = () => clearTimeout(timerId);
+    }
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      pauseAnimation();
       clearInterval(speedInterval);
+      cancelIdle();
       ro.disconnect();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("mousemove", onMouseMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -314,7 +399,7 @@ export const DotField = memo(function DotField({
   };
 
   return (
-    <div ref={containerRef} className={className} style={mergedStyle}>
+    <div ref={containerRef} className={className} style={mergedStyle} aria-hidden="true" role="presentation">
       <canvas
         ref={canvasRef}
         style={{
@@ -325,6 +410,7 @@ export const DotField = memo(function DotField({
         }}
       />
       <svg
+        aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,

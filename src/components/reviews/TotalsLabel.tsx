@@ -11,7 +11,7 @@ export function TotalsLabel({ total, isLoading, hasFilters }: TotalsLabelProps) 
 
   return (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <MessageSquareText className="size-4" />
+      <MessageSquareText className="size-4" aria-hidden="true" />
       <span className="tabular-nums">
         <span className="font-bold text-foreground">
           {total.toLocaleString()}

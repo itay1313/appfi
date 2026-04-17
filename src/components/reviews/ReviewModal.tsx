@@ -36,10 +36,11 @@ function timeAgo(dateStr: string): string {
 
 function BigStars({ rating }: { rating: number }) {
   return (
-    <div className="flex items-center gap-1" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-1" role="img" aria-label={`${rating} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
+          aria-hidden="true"
           className={cn(
             "size-5 transition-colors",
             i < rating ? "fill-star text-star" : "fill-muted text-muted"
@@ -168,7 +169,7 @@ export function ReviewModal({ review, children }: ReviewModalProps) {
                     {langFlag ? (
                       <span>{langFlag}</span>
                     ) : (
-                      <Globe className="size-3 text-muted-foreground/60" />
+                      <Globe className="size-3 text-muted-foreground/60" aria-hidden="true" />
                     )}
                     <span>{languageName(lang)}</span>
                   </span>
@@ -209,7 +210,8 @@ export function ReviewModal({ review, children }: ReviewModalProps) {
               className="flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               View on Appfigures
-              <ExternalLink className="size-3" />
+              <ExternalLink className="size-3" aria-hidden="true" />
+              <span className="sr-only">(opens in a new tab)</span>
             </a>
           </div>
         </div>

@@ -47,7 +47,7 @@ const LANGUAGE_OPTIONS = [
 
 function MiniStars({ count }: { count: number }) {
   return (
-    <span className="flex items-center gap-px">
+    <span className="flex items-center gap-px" aria-hidden="true">
       {Array.from({ length: count }, (_, i) => (
         <Star key={i} className="size-3 fill-current" />
       ))}
@@ -119,7 +119,7 @@ export function SearchFilters({
       {/* Top row: search + language */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
         <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
           <Input
             type="text"
             placeholder="Search reviews…"
@@ -135,7 +135,7 @@ export function SearchFilters({
               onClick={clearQuery}
               className="absolute right-1.5 top-1/2 size-7 -translate-y-1/2 rounded-lg text-muted-foreground hover:text-foreground"
             >
-              <X className="size-3.5" />
+              <X className="size-3.5" aria-hidden="true" />
               <span className="sr-only">Clear search</span>
             </Button>
           )}
@@ -152,10 +152,10 @@ export function SearchFilters({
             )}
           >
             <span className="flex items-center gap-2">
-              <Globe className="size-3.5 shrink-0 text-muted-foreground" />
+              <Globe className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
               <LangLabel code={activeLangCode} />
             </span>
-            <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
+            <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
@@ -177,7 +177,7 @@ export function SearchFilters({
                   <span className="flex flex-1 items-center gap-2">
                     {opt.value === "all" ? (
                       <>
-                        <Globe className="size-3.5 text-muted-foreground" />
+                        <Globe className="size-3.5 text-muted-foreground" aria-hidden="true" />
                         <span>All Languages</span>
                       </>
                     ) : (
@@ -190,7 +190,7 @@ export function SearchFilters({
                     )}
                   </span>
                   {(lang ?? "all") === opt.value && (
-                    <Check className="ml-auto size-3.5 shrink-0 text-primary" />
+                    <Check className="ml-auto size-3.5 shrink-0 text-primary" aria-hidden="true" />
                   )}
                 </DropdownMenuRadioItem>
               ))}
@@ -208,6 +208,7 @@ export function SearchFilters({
         <button
           type="button"
           aria-pressed={!activeRating}
+          aria-label="All ratings"
           onClick={() => onStarsChange(undefined)}
           className={cn(
             "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-all",

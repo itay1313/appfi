@@ -4,6 +4,7 @@ import type { ReviewStats } from "@/hooks/use-review-stats";
 import { languageFlag, languageName } from "@/lib/languages";
 import type { Review } from "@/types/review";
 import { useMemo } from "react";
+import { useCountUp } from "@/hooks/use-count-up";
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
@@ -26,13 +27,18 @@ function Skeleton({ className }: { className?: string }) {
 interface StatTileProps {
   icon: React.ReactNode;
   label: string;
-  value: string;
+  /** Raw numeric value — animated from 0 → target on load */
+  rawValue: number;
+  /** Format the animated intermediate value into the display string */
+  format: (n: number) => string;
   sub?: string;
   isLoading?: boolean;
   valueClassName?: string;
 }
 
-function StatTile({ icon, label, value, sub, isLoading, valueClassName }: StatTileProps) {
+function StatTile({ icon, label, rawValue, format, sub, isLoading, valueClassName }: StatTileProps) {
+  const animated = useCountUp(rawValue, !isLoading);
+
   return (
     <div className="flex flex-col gap-1.5 rounded-xl border border-border/50 bg-card px-4 py-3.5 shadow-xs">
       <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -43,7 +49,7 @@ function StatTile({ icon, label, value, sub, isLoading, valueClassName }: StatTi
         <Skeleton className="h-7 w-24" />
       ) : (
         <p className={cn("text-[1.6rem] font-extrabold leading-none tabular-nums tracking-tight", valueClassName)}>
-          {value}
+          {format(animated)}
         </p>
       )}
       {sub && (
@@ -157,20 +163,23 @@ export function InsightsBar({ stats, reviews }: InsightsBarProps) {
         <StatTile
           icon={<MessageSquare className="size-3.5" aria-hidden="true" />}
           label="Total Reviews"
-          value={grandTotal.toLocaleString()}
+          rawValue={grandTotal}
+          format={(n) => Math.round(n).toLocaleString()}
           isLoading={isLoading}
         />
         <StatTile
           icon={<Star className="size-3.5 fill-star text-star" aria-hidden="true" />}
           label="Avg Rating"
-          value={averageRating.toFixed(2)}
+          rawValue={averageRating}
+          format={(n) => n.toFixed(2)}
           sub="out of 5.0"
           isLoading={isLoading}
         />
         <StatTile
           icon={<TrendingUp className="size-3.5 text-green-500" aria-hidden="true" />}
           label="Satisfaction"
-          value={`${satisfactionPercent.toFixed(1)}%`}
+          rawValue={satisfactionPercent}
+          format={(n) => `${n.toFixed(1)}%`}
           sub="rated 4★ or 5★"
           isLoading={isLoading}
           valueClassName="text-green-600 dark:text-green-400"
@@ -178,7 +187,8 @@ export function InsightsBar({ stats, reviews }: InsightsBarProps) {
         <StatTile
           icon={<AlertTriangle className="size-3.5 text-red-500" aria-hidden="true" />}
           label="Critical"
-          value={`${criticalPercent.toFixed(1)}%`}
+          rawValue={criticalPercent}
+          format={(n) => `${n.toFixed(1)}%`}
           sub="rated 1★"
           isLoading={isLoading}
           valueClassName="text-red-600 dark:text-red-400"

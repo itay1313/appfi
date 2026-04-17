@@ -17,7 +17,7 @@ export function Header() {
         <Link to="/" className="group flex items-center gap-3">
           {/* Logo mark */}
           <div className="relative flex size-9 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
-            <svg viewBox="0 0 24 24" className="size-5 text-primary-foreground" fill="none">
+            <svg viewBox="0 0 24 24" className="size-5 text-primary-foreground" fill="none" aria-hidden="true">
               {/* Star / sparkle shape */}
               <path
                 d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
@@ -42,7 +42,7 @@ export function Header() {
             to="/top-apps"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            <LayoutGrid className="size-3.5" />
+            <LayoutGrid className="size-3.5" aria-hidden="true" />
             Top Apps
           </Link>
 

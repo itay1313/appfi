@@ -10,10 +10,11 @@ export function StarRating({ rating, size = "md" }: StarRatingProps) {
   const iconSize = size === "sm" ? "size-3.5" : "size-4";
 
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-0.5" role="img" aria-label={`${rating} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
+          aria-hidden="true"
           className={cn(
             iconSize,
             "transition-colors",
