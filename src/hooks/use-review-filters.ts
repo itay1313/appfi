@@ -60,7 +60,7 @@ export function useReviewFilters() {
     return {
       q: searchParams.get("q")?.trim() || undefined,
       stars: ratingsSchema.parse(searchParams.get("stars") ?? undefined),
-      lang: langSchema.parse(searchParams.get("lang") ?? undefined) ?? "en",
+      lang: langSchema.parse(searchParams.get("lang") ?? undefined),
       sort: sortSchema.parse(searchParams.get("sort") ?? undefined),
     };
   }, [searchParams]);
