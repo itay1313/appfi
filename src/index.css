@@ -1,13 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "@fontsource-variable/plus-jakarta-sans";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
   --color-sidebar-ring: var(--sidebar-ring);
@@ -55,82 +55,82 @@
 }
 
 :root {
-  --background: oklch(0.985 0.002 240);
-  --foreground: oklch(0.145 0.005 250);
+  --background: oklch(0.98 0.002 270);
+  --foreground: oklch(0.12 0.02 270);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0.005 250);
+  --card-foreground: oklch(0.12 0.02 270);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0.005 250);
-  --primary: oklch(0.37 0.14 280);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.965 0.005 260);
-  --secondary-foreground: oklch(0.25 0.01 250);
-  --muted: oklch(0.96 0.005 260);
-  --muted-foreground: oklch(0.50 0.01 250);
-  --accent: oklch(0.955 0.012 280);
-  --accent-foreground: oklch(0.37 0.14 280);
+  --popover-foreground: oklch(0.12 0.02 270);
+  --primary: oklch(0.55 0.25 285);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.955 0.01 275);
+  --secondary-foreground: oklch(0.20 0.03 270);
+  --muted: oklch(0.955 0.008 270);
+  --muted-foreground: oklch(0.46 0.02 270);
+  --accent: oklch(0.94 0.02 285);
+  --accent-foreground: oklch(0.45 0.20 285);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.91 0.005 260);
-  --input: oklch(0.91 0.005 260);
-  --ring: oklch(0.37 0.14 280);
-  --star: oklch(0.80 0.18 85);
-  --surface: oklch(0.975 0.003 260);
+  --border: oklch(0.915 0.008 270);
+  --input: oklch(0.915 0.008 270);
+  --ring: oklch(0.55 0.25 285);
+  --star: oklch(0.78 0.17 80);
+  --surface: oklch(0.97 0.004 270);
   --surface-elevated: oklch(1 0 0);
   --radius: 0.75rem;
 
-  --chart-1: oklch(0.37 0.14 280);
-  --chart-2: oklch(0.55 0.20 280);
-  --chart-3: oklch(0.70 0.15 280);
-  --chart-4: oklch(0.80 0.10 280);
-  --chart-5: oklch(0.90 0.05 280);
+  --chart-1: oklch(0.55 0.25 285);
+  --chart-2: oklch(0.60 0.22 300);
+  --chart-3: oklch(0.65 0.18 320);
+  --chart-4: oklch(0.75 0.14 280);
+  --chart-5: oklch(0.88 0.08 280);
 
-  --sidebar: oklch(0.985 0.002 240);
-  --sidebar-foreground: oklch(0.145 0.005 250);
-  --sidebar-primary: oklch(0.37 0.14 280);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.955 0.012 280);
-  --sidebar-accent-foreground: oklch(0.37 0.14 280);
-  --sidebar-border: oklch(0.91 0.005 260);
-  --sidebar-ring: oklch(0.37 0.14 280);
+  --sidebar: oklch(0.98 0.002 270);
+  --sidebar-foreground: oklch(0.12 0.02 270);
+  --sidebar-primary: oklch(0.55 0.25 285);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.94 0.02 285);
+  --sidebar-accent-foreground: oklch(0.45 0.20 285);
+  --sidebar-border: oklch(0.915 0.008 270);
+  --sidebar-ring: oklch(0.55 0.25 285);
 }
 
 .dark {
-  --background: oklch(0.13 0.01 260);
-  --foreground: oklch(0.93 0.005 250);
-  --card: oklch(0.17 0.012 260);
-  --card-foreground: oklch(0.93 0.005 250);
-  --popover: oklch(0.17 0.012 260);
-  --popover-foreground: oklch(0.93 0.005 250);
-  --primary: oklch(0.72 0.18 280);
-  --primary-foreground: oklch(0.13 0.01 260);
-  --secondary: oklch(0.22 0.015 260);
-  --secondary-foreground: oklch(0.90 0.005 250);
-  --muted: oklch(0.22 0.015 260);
-  --muted-foreground: oklch(0.65 0.01 250);
-  --accent: oklch(0.22 0.02 280);
-  --accent-foreground: oklch(0.82 0.15 280);
+  --background: oklch(0.11 0.015 270);
+  --foreground: oklch(0.94 0.006 270);
+  --card: oklch(0.155 0.018 270);
+  --card-foreground: oklch(0.94 0.006 270);
+  --popover: oklch(0.155 0.018 270);
+  --popover-foreground: oklch(0.94 0.006 270);
+  --primary: oklch(0.70 0.22 285);
+  --primary-foreground: oklch(0.11 0.015 270);
+  --secondary: oklch(0.20 0.02 270);
+  --secondary-foreground: oklch(0.92 0.006 270);
+  --muted: oklch(0.20 0.02 270);
+  --muted-foreground: oklch(0.62 0.015 270);
+  --accent: oklch(0.22 0.03 285);
+  --accent-foreground: oklch(0.80 0.18 285);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.26 0.015 260);
-  --input: oklch(0.26 0.015 260);
-  --ring: oklch(0.72 0.18 280);
-  --star: oklch(0.82 0.16 85);
-  --surface: oklch(0.15 0.012 260);
-  --surface-elevated: oklch(0.19 0.015 260);
+  --border: oklch(0.24 0.02 270);
+  --input: oklch(0.24 0.02 270);
+  --ring: oklch(0.70 0.22 285);
+  --star: oklch(0.82 0.15 80);
+  --surface: oklch(0.13 0.015 270);
+  --surface-elevated: oklch(0.18 0.02 270);
 
-  --chart-1: oklch(0.72 0.18 280);
-  --chart-2: oklch(0.60 0.15 280);
-  --chart-3: oklch(0.50 0.12 280);
-  --chart-4: oklch(0.40 0.10 280);
-  --chart-5: oklch(0.30 0.06 280);
+  --chart-1: oklch(0.70 0.22 285);
+  --chart-2: oklch(0.62 0.18 300);
+  --chart-3: oklch(0.55 0.15 320);
+  --chart-4: oklch(0.45 0.12 280);
+  --chart-5: oklch(0.35 0.08 280);
 
-  --sidebar: oklch(0.15 0.012 260);
-  --sidebar-foreground: oklch(0.93 0.005 250);
-  --sidebar-primary: oklch(0.72 0.18 280);
-  --sidebar-primary-foreground: oklch(0.13 0.01 260);
-  --sidebar-accent: oklch(0.22 0.02 280);
-  --sidebar-accent-foreground: oklch(0.82 0.15 280);
-  --sidebar-border: oklch(0.26 0.015 260);
-  --sidebar-ring: oklch(0.72 0.18 280);
+  --sidebar: oklch(0.13 0.015 270);
+  --sidebar-foreground: oklch(0.94 0.006 270);
+  --sidebar-primary: oklch(0.70 0.22 285);
+  --sidebar-primary-foreground: oklch(0.11 0.015 270);
+  --sidebar-accent: oklch(0.22 0.03 285);
+  --sidebar-accent-foreground: oklch(0.80 0.18 285);
+  --sidebar-border: oklch(0.24 0.02 270);
+  --sidebar-ring: oklch(0.70 0.22 285);
 }
 
 @layer base {
@@ -142,7 +142,7 @@
   }
   html {
     @apply font-sans;
-    font-feature-settings: "ss01", "ss02", "cv01";
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

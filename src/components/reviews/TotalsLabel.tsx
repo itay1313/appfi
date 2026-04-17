@@ -13,7 +13,7 @@ export function TotalsLabel({ total, isLoading, hasFilters }: TotalsLabelProps) 
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
       <MessageSquareText className="size-4" />
       <span className="tabular-nums">
-        <span className="font-semibold text-foreground">
+        <span className="font-bold text-foreground">
           {total.toLocaleString()}
         </span>{" "}
         {hasFilters ? "matching reviews" : "total reviews"}

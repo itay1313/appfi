@@ -9,7 +9,7 @@ export function ReviewGroup({ group }: ReviewGroupProps) {
   return (
     <section>
       <div className="mb-4 flex items-center gap-3">
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">
+        <h2 className="text-sm font-bold tracking-tight text-foreground">
           {group.label}
         </h2>
         <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium tabular-nums text-muted-foreground">

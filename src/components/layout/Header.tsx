@@ -28,7 +28,7 @@ export function Header() {
             </svg>
           </div>
           <div className="flex flex-col">
-            <span className="text-[15px] font-semibold leading-tight tracking-tight text-foreground">
+            <span className="text-[15px] font-bold leading-tight tracking-tight text-foreground">
               ReviewScope
             </span>
             <span className="text-[11px] font-medium leading-tight text-muted-foreground">

@@ -3,7 +3,7 @@
  * Interactive dot grid with cursor-reactive bulge effect, pure canvas.
  * @see https://reactbits.dev/backgrounds/dot-field
  */
-import { useEffect, useRef, memo, type HTMLAttributes } from "react";
+import { useEffect, useRef, memo, type CSSProperties } from "react";
 
 const TWO_PI = Math.PI * 2;
 
@@ -18,7 +18,7 @@ interface Dot {
   y: number;
 }
 
-interface DotFieldProps extends HTMLAttributes<HTMLDivElement> {
+export interface DotFieldProps {
   dotRadius?: number;
   dotSpacing?: number;
   cursorRadius?: number;
@@ -31,6 +31,8 @@ interface DotFieldProps extends HTMLAttributes<HTMLDivElement> {
   gradientFrom?: string;
   gradientTo?: string;
   glowColor?: string;
+  className?: string;
+  style?: CSSProperties;
 }
 
 export const DotField = memo(function DotField({
@@ -46,47 +48,74 @@ export const DotField = memo(function DotField({
   gradientFrom = "rgba(168, 85, 247, 0.35)",
   gradientTo = "rgba(180, 151, 207, 0.25)",
   glowColor = "#120F17",
-  ...rest
+  className,
+  style,
 }: DotFieldProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
   const glowRef = useRef<SVGCircleElement>(null);
   const dotsRef = useRef<Dot[]>([]);
-  const mouseRef = useRef({ x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 });
+  const mouseRef = useRef({
+    x: -9999,
+    y: -9999,
+    prevX: -9999,
+    prevY: -9999,
+    speed: 0,
+  });
   const rafRef = useRef(0);
   const sizeRef = useRef({ w: 0, h: 0, offsetX: 0, offsetY: 0 });
   const glowOpacity = useRef(0);
   const engagement = useRef(0);
-  const propsRef = useRef({ dotRadius, dotSpacing, cursorRadius, cursorForce, bulgeOnly, bulgeStrength, sparkle, waveAmplitude, gradientFrom, gradientTo });
-  propsRef.current = { dotRadius, dotSpacing, cursorRadius, cursorForce, bulgeOnly, bulgeStrength, sparkle, waveAmplitude, gradientFrom, gradientTo };
-  const rebuildRef = useRef<(() => void) | null>(null);
-  const glowId = useRef(`dot-field-glow-${Math.random().toString(36).slice(2, 9)}`);
+  const propsRef = useRef({
+    dotRadius,
+    dotSpacing,
+    cursorRadius,
+    cursorForce,
+    bulgeOnly,
+    bulgeStrength,
+    sparkle,
+    waveAmplitude,
+    gradientFrom,
+    gradientTo,
+  });
+  propsRef.current = {
+    dotRadius,
+    dotSpacing,
+    cursorRadius,
+    cursorForce,
+    bulgeOnly,
+    bulgeStrength,
+    sparkle,
+    waveAmplitude,
+    gradientFrom,
+    gradientTo,
+  };
+  const glowId = useRef(
+    `dot-field-glow-${Math.random().toString(36).slice(2, 9)}`
+  );
 
   useEffect(() => {
+    const container = containerRef.current;
     const canvas = canvasRef.current;
     const glowEl = glowRef.current;
-    if (!canvas) return;
+    if (!canvas || !container) return;
     const ctx = canvas.getContext("2d", { alpha: true })!;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let resizeTimer: ReturnType<typeof setTimeout>;
 
-    function resize() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(doResize, 100);
-    }
-
-    function doResize() {
-      const parent = canvas!.parentElement;
-      if (!parent) return;
-      const rect = parent.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
+    function setup(w: number, h: number) {
+      if (w === 0 || h === 0) return;
       canvas!.width = w * dpr;
       canvas!.height = h * dpr;
       canvas!.style.width = `${w}px`;
       canvas!.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      sizeRef.current = { w, h, offsetX: rect.left + window.scrollX, offsetY: rect.top + window.scrollY };
+      const rect = container!.getBoundingClientRect();
+      sizeRef.current = {
+        w,
+        h,
+        offsetX: rect.left + window.scrollX,
+        offsetY: rect.top + window.scrollY,
+      };
       buildDots(w, h);
     }
 
@@ -97,12 +126,13 @@ export const DotField = memo(function DotField({
       const rows = Math.floor(h / step);
       const padX = (w % step) / 2;
       const padY = (h % step) / 2;
-      const dots: Dot[] = [];
+      const dots: Dot[] = new Array(rows * cols);
+      let idx = 0;
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const ax = padX + col * step + step / 2;
           const ay = padY + row * step + step / 2;
-          dots.push({ ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay });
+          dots[idx++] = { ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay };
         }
       }
       dotsRef.current = dots;
@@ -136,6 +166,11 @@ export const DotField = memo(function DotField({
       const p = propsRef.current;
       const len = dots.length;
       const t = frameCount * 0.02;
+
+      if (len === 0) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
 
       const targetEngagement = Math.min(m.speed / 5, 1);
       engagement.current += (targetEngagement - engagement.current) * 0.06;
@@ -222,38 +257,82 @@ export const DotField = memo(function DotField({
       rafRef.current = requestAnimationFrame(tick);
     }
 
-    doResize();
-    window.addEventListener("resize", resize);
+    // Use ResizeObserver to detect when the container actually has dimensions,
+    // which is more reliable than reading getBoundingClientRect on mount for
+    // absolutely-positioned containers that inherit height from siblings.
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width > 0 && height > 0) {
+          setup(width, height);
+        }
+      }
+    });
+    ro.observe(container);
+
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     rafRef.current = requestAnimationFrame(tick);
-    rebuildRef.current = () => {
-      const { w, h } = sizeRef.current;
-      if (w > 0 && h > 0) buildDots(w, h);
-    };
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       clearInterval(speedInterval);
-      clearTimeout(resizeTimer);
-      window.removeEventListener("resize", resize);
+      ro.disconnect();
       window.removeEventListener("mousemove", onMouseMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    rebuildRef.current?.();
+    const container = containerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      const p = propsRef.current;
+      const step = p.dotRadius + p.dotSpacing;
+      const cols = Math.floor(rect.width / step);
+      const rows = Math.floor(rect.height / step);
+      const padX = (rect.width % step) / 2;
+      const padY = (rect.height % step) / 2;
+      const dots: Dot[] = new Array(rows * cols);
+      let idx = 0;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const ax = padX + col * step + step / 2;
+          const ay = padY + row * step + step / 2;
+          dots[idx++] = { ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay };
+        }
+      }
+      dotsRef.current = dots;
+    }
   }, [dotRadius, dotSpacing]);
 
+  const mergedStyle: CSSProperties = {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    ...style,
+  };
+
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }} {...rest}>
+    <div ref={containerRef} className={className} style={mergedStyle}>
       <canvas
         ref={canvasRef}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+        }}
       />
       <svg
-        ref={svgRef}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          mixBlendMode: "screen",
+        }}
       >
         <defs>
           <radialGradient id={glowId.current}>

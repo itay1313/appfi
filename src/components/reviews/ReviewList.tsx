@@ -23,7 +23,7 @@ export function ReviewList({ groups }: ReviewListProps) {
             <path d="m21 21-4.3-4.3" />
           </svg>
         </div>
-        <p className="text-sm font-medium text-foreground">No reviews found</p>
+        <p className="text-sm font-bold text-foreground">No reviews found</p>
         <p className="mt-1 text-sm text-muted-foreground">
           Try adjusting your search or filter criteria
         </p>

@@ -23,7 +23,7 @@ export function ReviewCard({ title, body, author, stars, date }: ReviewCardProps
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex-1 space-y-1.5">
           <StarRating rating={stars} size="sm" />
-          <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-foreground">
+          <h3 className="text-[15px] font-bold leading-snug tracking-tight text-foreground">
             {title || "No title"}
           </h3>
         </div>

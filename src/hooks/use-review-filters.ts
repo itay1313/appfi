@@ -103,9 +103,7 @@ export function useReviewFilters() {
   }, [setSearchParams]);
 
   const effectiveSort: SortOrder = filters.sort ?? DEFAULT_SORT;
-  const hasActiveFilters = Boolean(
-    filters.q || filters.stars || filters.lang
-  );
+  const hasActiveFilters = Boolean(filters.q || filters.stars);
 
   return {
     filters,

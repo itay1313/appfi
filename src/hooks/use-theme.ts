@@ -1,8 +1,25 @@
-import { useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  type ReactNode,
+} from "react";
+import { createElement } from "react";
 
 type Theme = "light" | "dark" | "system";
+type ResolvedTheme = "light" | "dark";
 
-function getSystemTheme(): "light" | "dark" {
+interface ThemeContextValue {
+  theme: Theme;
+  resolvedTheme: ResolvedTheme;
+  setTheme: (next: Theme) => void;
+}
+
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+function getSystemTheme(): ResolvedTheme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
@@ -13,7 +30,7 @@ function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle("dark", resolved === "dark");
 }
 
-export function useTheme() {
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
     const stored = localStorage.getItem("theme") as Theme | null;
     return stored ?? "system";
@@ -36,7 +53,20 @@ export function useTheme() {
     }
   }, [theme]);
 
-  const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
+  const resolvedTheme: ResolvedTheme =
+    theme === "system" ? getSystemTheme() : theme;
 
-  return { theme, resolvedTheme, setTheme } as const;
+  return createElement(
+    ThemeContext.Provider,
+    { value: { theme, resolvedTheme, setTheme } },
+    children
+  );
+}
+
+export function useTheme(): ThemeContextValue {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return ctx;
 }
