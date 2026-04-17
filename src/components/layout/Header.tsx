@@ -1,4 +1,4 @@
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, LayoutGrid } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/use-theme";
 import {
@@ -40,7 +40,16 @@ export function Header() {
           </div>
         </Link>
 
-        <DropdownMenu>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/top-apps"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <LayoutGrid className="size-3.5" />
+            Top Apps
+          </Link>
+
+          <DropdownMenu>
           <DropdownMenuTrigger className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
             {theme === "dark" ? (
               <Moon className="size-[18px]" />
@@ -66,6 +75,7 @@ export function Header() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
     </header>
   );
