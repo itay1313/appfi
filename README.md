@@ -8,7 +8,7 @@
 
 # ItayReview
 
-### *Where reviews meet insight ✦*
+### *Explore 345K+ ChatGPT reviews at a glance ✦*
 
 A beautifully crafted explorer for **345,000+** ChatGPT iOS App Store reviews.  
 Search, filter by language & rating, and surface real user insights — fast.

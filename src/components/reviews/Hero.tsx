@@ -82,7 +82,7 @@ export function Hero() {
       gradientFrom: `oklch(${ch} / 0.22)`,
       gradientTo:   `oklch(${ch} / 0.10)`,
       glowColor:    "#ffffff",
-      bg:           "bg-[#f4f4f8]",
+      bg:           "bg-[#fffbfa]",
     };
   }, [isDark, primaryRaw]);
 

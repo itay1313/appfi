@@ -31,11 +31,8 @@ export function Header() {
 
           {/* Brand text */}
           <div className="flex flex-col">
-            <span className="text-[15px] font-extrabold leading-tight tracking-tight text-foreground">
+            <span className="text-lg font-extrabold leading-tight tracking-tight text-foreground">
               ItayReview
-            </span>
-            <span className="text-[10.5px] font-medium leading-tight text-muted-foreground">
-              Where reviews meet insight ✦
             </span>
           </div>
         </Link>
