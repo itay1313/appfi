@@ -86,7 +86,7 @@ Built with a focus on **performance**, **accessibility**, and **developer craft*
 | **Language** | TypeScript 6 | End-to-end type safety, strict mode, no `any` |
 | **Build** | Vite 8 | Sub-second HMR, native ESM, Rolldown bundler |
 | **Styling** | Tailwind CSS v4 | CSS-native engine with `oklch()` color system |
-| **Components** | Base UI (MUI) | Headless accessible primitives — zero style opinions |
+| **Components** | Base UI | Headless accessible primitives — zero style opinions |
 | **Data** | TanStack Query v5 | Infinite pagination, caching, `keepPreviousData`, automatic abort |
 | **Routing** | React Router v7 | URL-driven filter state via `useSearchParams` |
 | **Validation** | Zod | URL param coercion — `?stars=banana` silently becomes `undefined` |
