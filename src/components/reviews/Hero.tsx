@@ -42,8 +42,8 @@ export function Hero() {
     }
     return {
       // indigo-600 equivalent: oklch(0.648 0.241 33) — deep flame-orange
-      gradientFrom: "oklch(0.648 0.241 33 / 0.22)",
-      gradientTo:   "oklch(0.648 0.241 33 / 0.10)",
+      gradientFrom: "oklch(0.648 0.241 33 / 0.45)",
+      gradientTo:   "oklch(0.648 0.241 33 / 0.22)",
       glowColor:    "#ffffff",
       bg:           "bg-[#fffbfa]",
     };
