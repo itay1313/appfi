@@ -1,4 +1,4 @@
-import { Star, TrendingUp, AlertTriangle, MessageSquare, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ReviewStats, StarDistItem } from "@/hooks/use-review-stats";
 import { languageFlag, languageName } from "@/lib/languages";
@@ -25,7 +25,6 @@ function Skeleton({ className, style }: { className?: string; style?: React.CSSP
 /* ─── Stat tile ──────────────────────────────────────────────────── */
 
 interface StatTileProps {
-  icon: React.ReactNode;
   label: string;
   /** Raw numeric value — animated from 0 → target on load */
   rawValue: number;
@@ -36,13 +35,12 @@ interface StatTileProps {
   valueClassName?: string;
 }
 
-function StatTile({ icon, label, rawValue, format, sub, isLoading, valueClassName }: StatTileProps) {
+function StatTile({ label, rawValue, format, sub, isLoading, valueClassName }: StatTileProps) {
   const animated = useCountUp(rawValue, !isLoading);
 
   return (
     <div className="flex flex-col gap-1.5 rounded-xl border border-border/50 bg-card px-4 py-3.5 shadow-xs">
-      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-        {icon}
+      <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
       {isLoading ? (
@@ -255,7 +253,6 @@ export function InsightsBar({
       {/* ── Stat tiles ──────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile
-          icon={<MessageSquare className="size-3.5" aria-hidden="true" />}
           label="Total Reviews"
           rawValue={grandTotal}
           format={(n) => Math.round(n).toLocaleString()}
@@ -263,7 +260,6 @@ export function InsightsBar({
           isLoading={isLoading}
         />
         <StatTile
-          icon={<Star className="size-3.5 fill-star text-star" aria-hidden="true" />}
           label="Avg Rating"
           rawValue={averageRating}
           format={(n) => n.toFixed(2)}
@@ -271,7 +267,6 @@ export function InsightsBar({
           isLoading={isLoading}
         />
         <StatTile
-          icon={<TrendingUp className="size-3.5 text-green-500" aria-hidden="true" />}
           label="Satisfaction"
           rawValue={satisfactionPercent}
           format={(n) => `${n.toFixed(1)}%`}
@@ -280,7 +275,6 @@ export function InsightsBar({
           valueClassName="text-green-600 dark:text-green-400"
         />
         <StatTile
-          icon={<AlertTriangle className="size-3.5 text-red-500" aria-hidden="true" />}
           label="Critical"
           rawValue={criticalPercent}
           format={(n) => `${n.toFixed(1)}%`}
