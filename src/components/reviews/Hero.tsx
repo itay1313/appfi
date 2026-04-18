@@ -1,62 +1,6 @@
-import { useMemo, useEffect, useState, useRef } from "react";
+import { useMemo } from "react";
 import { DotField } from "@/components/ui/DotField";
 import { useTheme } from "@/hooks/use-theme";
-
-function useDeferredMount(): boolean {
-  const [ready, setReady] = useState(false);
-  const ran = useRef(false);
-  useEffect(() => {
-    if (ran.current) return;
-    ran.current = true;
-    if (typeof requestIdleCallback !== "undefined") {
-      const id = requestIdleCallback(() => setReady(true));
-      return () => cancelIdleCallback(id);
-    }
-    const id = setTimeout(() => setReady(true), 80);
-    return () => clearTimeout(id);
-  }, []);
-  return ready;
-}
-
-/**
- * Reads a CSS custom property from :root and re-fires whenever the
- * theme class changes (i.e. dark ↔ light toggle).
- */
-function useCSSVar(token: string): string {
-  const [value, setValue] = useState(() =>
-    typeof document !== "undefined"
-      ? getComputedStyle(document.documentElement)
-          .getPropertyValue(token)
-          .trim()
-      : ""
-  );
-
-  useEffect(() => {
-    const update = () =>
-      setValue(
-        getComputedStyle(document.documentElement)
-          .getPropertyValue(token)
-          .trim()
-      );
-    const mo = new MutationObserver(update);
-    mo.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => mo.disconnect();
-  }, [token]);
-
-  return value;
-}
-
-/** Strips wrapper and alpha from an oklch() string → bare "L C H" channels */
-function oklchChannels(raw: string): string {
-  return raw
-    .replace(/^oklch\(\s*/, "")
-    .replace(/\s*\)$/, "")
-    .replace(/\s*\/\s*[\d.]+$/, "")
-    .trim();
-}
 
 /** Official OpenAI / ChatGPT "bloom" logo — viewBox 0 0 24 24 */
 const OPENAI_PATH =
@@ -81,44 +25,46 @@ const CHATGPT_ICON_LIGHT = (
 export function Hero() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-  const canvasReady = useDeferredMount();
 
-  const primaryRaw = useCSSVar("--primary");
-
+  // Colours are hardcoded from the known flame-orange scale (hue 33) defined
+  // in index.css. We can't read --primary via getComputedStyle because CSS
+  // custom properties that reference other vars (var(--indigo-400)) are
+  // returned unresolved, which produces an invalid canvas fillStyle string.
   const palette = useMemo(() => {
-    const ch = primaryRaw ? oklchChannels(primaryRaw) : "0.46 0.312 262";
     if (isDark) {
       return {
-        gradientFrom: `oklch(${ch} / 0.55)`,
-        gradientTo:   `oklch(${ch} / 0.28)`,
+        // indigo-400 equivalent: oklch(0.72 0.200 33) — bright flame-orange
+        gradientFrom: "oklch(0.72 0.200 33 / 0.55)",
+        gradientTo:   "oklch(0.72 0.200 33 / 0.28)",
         glowColor:    "#0e0c18",
         bg:           "bg-[#08070f]",
       };
     }
     return {
-      gradientFrom: `oklch(${ch} / 0.22)`,
-      gradientTo:   `oklch(${ch} / 0.10)`,
+      // indigo-600 equivalent: oklch(0.648 0.241 33) — deep flame-orange
+      gradientFrom: "oklch(0.648 0.241 33 / 0.22)",
+      gradientTo:   "oklch(0.648 0.241 33 / 0.10)",
       glowColor:    "#ffffff",
       bg:           "bg-[#fffbfa]",
     };
-  }, [isDark, primaryRaw]);
+  }, [isDark]);
 
   return (
     <section className={`relative overflow-hidden ${palette.bg}`}>
-      {canvasReady && (
-        <div className="absolute inset-0">
-          <DotField
-            dotRadius={2}
-            dotSpacing={20}
-            cursorRadius={400}
-            bulgeStrength={50}
-            glowRadius={180}
-            gradientFrom={palette.gradientFrom}
-            gradientTo={palette.gradientTo}
-            glowColor={palette.glowColor}
-          />
-        </div>
-      )}
+      {/* Dot field — rendered immediately; DotField lazily starts its own RAF
+          via requestIdleCallback so it never blocks the initial paint. */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <DotField
+          dotRadius={2}
+          dotSpacing={20}
+          cursorRadius={400}
+          bulgeStrength={50}
+          glowRadius={180}
+          gradientFrom={palette.gradientFrom}
+          gradientTo={palette.gradientTo}
+          glowColor={palette.glowColor}
+        />
+      </div>
 
       {/* Bottom fade into page background */}
       <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-background to-transparent" />

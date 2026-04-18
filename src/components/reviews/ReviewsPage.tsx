@@ -6,7 +6,6 @@ import { groupReviewsByDate } from "@/lib/date-groups";
 import { primaryLanguage } from "@/lib/languages";
 import { Hero } from "./Hero";
 import { SearchFilters } from "./SearchFilters";
-import { TotalsLabel } from "./TotalsLabel";
 import { InsightsBar } from "./InsightsBar";
 import { ReviewList } from "./ReviewList";
 import { ReviewsSkeleton } from "./ReviewsSkeleton";
@@ -58,7 +57,14 @@ export function ReviewsPage() {
       <div className="mx-auto w-full max-w-5xl px-6 py-8" style={{ contentVisibility: "auto", containIntrinsicSize: "auto 800px" }}>
 
         {/* Insights panel */}
-        <InsightsBar stats={stats} reviews={reviews} isReviewsLoading={isInitialLoading} />
+        <InsightsBar
+          stats={stats}
+          filteredReviews={filteredReviews}
+          apiTotal={total}
+          hasActiveFilters={hasActiveFilters}
+          hasLangFilter={!!filters.lang}
+          isReviewsLoading={isInitialLoading}
+        />
 
         {/* Filters */}
         <div className="mb-4">
@@ -72,22 +78,16 @@ export function ReviewsPage() {
           />
         </div>
 
-        {/* Refetch indicator (filter changed, keepPreviousData showing old results) */}
-        {isFetching && !isInitialLoading && !isFetchingNextPage && (
-          <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="inline-block size-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            Updating results…
-          </div>
-        )}
-
-        {/* Totals */}
-        <div className="mb-6">
-          <TotalsLabel
-            total={total}
-            isLoading={isInitialLoading}
-            hasFilters={hasActiveFilters}
-          />
-        </div>
+        <div className="relative">
+          {isFetching && !isInitialLoading && !isFetchingNextPage && (
+            <div className="absolute -top-1 right-0 z-10 flex items-center gap-1.5 rounded-full bg-muted/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-sm backdrop-blur-sm">
+              <svg className="size-3 animate-spin" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="2" opacity="0.2" />
+                <path d="M14.5 8a6.5 6.5 0 0 0-6.5-6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              Updating…
+            </div>
+          )}
 
         {error ? (
           <ErrorState message={error} onRetry={retry} />
@@ -107,6 +107,7 @@ export function ReviewsPage() {
             </div>
           </>
         )}
+        </div>
       </div>
     </>
   );
