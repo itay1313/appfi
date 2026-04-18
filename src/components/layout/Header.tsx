@@ -44,7 +44,7 @@ export function Header() {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            Top Apps
+            Let's Work Together
           </Link>
 
           <DropdownMenu>
