@@ -3,6 +3,7 @@ import { Providers } from "@/app/Providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BackgroundCanvas } from "@/components/layout/BackgroundCanvas";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { ReviewsPage } from "@/components/reviews/ReviewsPage";
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <ScrollToTop />
       </div>
     </Providers>
   );
