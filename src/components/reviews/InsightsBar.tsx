@@ -16,9 +16,9 @@ const STAR_BAR_COLOR: Record<number, string> = {
   1: "bg-red-500",
 };
 
-function Skeleton({ className }: { className?: string }) {
+function Skeleton({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <div className={cn("animate-pulse rounded-md bg-muted", className)} />
+    <div className={cn("animate-pulse rounded-md bg-muted", className)} style={style} />
   );
 }
 
@@ -96,7 +96,7 @@ function DistRow({ stars, percent, total, isLoading }: DistRowProps) {
 
 /* ─── Language bar ───────────────────────────────────────────────── */
 
-function TopLanguagesCard({ reviews }: { reviews: Review[] }) {
+function TopLanguagesCard({ reviews, isLoading }: { reviews: Review[]; isLoading: boolean }) {
   const topLangs = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const r of reviews) {
@@ -111,6 +111,26 @@ function TopLanguagesCard({ reviews }: { reviews: Review[] }) {
   }, [reviews]);
 
   const total = topLangs.reduce((s, [, n]) => s + n, 0);
+
+  // Show skeleton while reviews are loading — keeps layout stable (no pop-in)
+  if (isLoading) {
+    return (
+      <div className="rounded-xl border border-border/50 bg-card px-5 py-4 shadow-xs">
+        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Top Languages
+        </p>
+        <div className="space-y-3">
+          {[60, 40, 25, 20, 12].map((w) => (
+            <div key={w} className="flex items-center gap-2.5">
+              <Skeleton className="h-3 w-20 rounded" />
+              <Skeleton className="h-2 flex-1 rounded-full" style={{ maxWidth: `${w}%` }} />
+              <Skeleton className="h-3 w-8 rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (topLangs.length === 0) return null;
 
@@ -153,9 +173,11 @@ interface InsightsBarProps {
   stats: ReviewStats;
   /** Currently loaded reviews — used for language breakdown */
   reviews: Review[];
+  /** True while the first page of reviews is still loading */
+  isReviewsLoading: boolean;
 }
 
-export function InsightsBar({ stats, reviews }: InsightsBarProps) {
+export function InsightsBar({ stats, reviews, isReviewsLoading }: InsightsBarProps) {
   const { isLoading, grandTotal, averageRating, satisfactionPercent, criticalPercent, distribution } = stats;
 
   return (
@@ -221,7 +243,7 @@ export function InsightsBar({ stats, reviews }: InsightsBarProps) {
         </div>
 
         {/* Top Languages */}
-        <TopLanguagesCard reviews={reviews} />
+        <TopLanguagesCard reviews={reviews} isLoading={isReviewsLoading} />
       </div>
     </div>
   );

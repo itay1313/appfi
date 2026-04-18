@@ -1,7 +1,7 @@
+@import "./fonts.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/plus-jakarta-sans";
 
 @custom-variant dark (&:is(.dark *));
 
