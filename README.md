@@ -2,11 +2,11 @@
 
 <br />
 
-<img src="https://img.shields.io/badge/✦-ItayReview-7c3aed?style=for-the-badge&labelColor=0f0f0f" alt="ItayReview" />
+<img src="https://img.shields.io/badge/✦-ItayReviews-7c3aed?style=for-the-badge&labelColor=0f0f0f" alt="ItayReviews" />
 
 <br /><br />
 
-# ItayReview
+# ItayReviews
 
 ### *Explore 345K+ ChatGPT reviews at a glance ✦*
 
@@ -29,7 +29,7 @@ Search, filter by language & rating, and surface real user insights — fast.
 
 ## ✦ Overview
 
-ItayReview is a fast, modern web app for exploring App Store reviews of the ChatGPT iOS app. Whether you're doing competitive research, tracking sentiment, or just curious what users are saying — every review is one search away.
+ItayReviews is a fast, modern web app for exploring App Store reviews of the ChatGPT iOS app. Whether you're doing competitive research, tracking sentiment, or just curious what users are saying — every review is one search away.
 
 Built with a focus on **performance**, **polish**, and **developer craft**.
 
@@ -141,6 +141,6 @@ Built with ♥ by **[itaycode.com](https://itaycode.com)**
 
 <div align="center">
 
-*✦ ItayReview — Where reviews meet insight*
+*✦ ItayReviews — Where reviews meet insight*
 
 </div>

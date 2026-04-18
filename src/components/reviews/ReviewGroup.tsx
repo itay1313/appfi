@@ -12,7 +12,7 @@ export function ReviewGroup({ group }: ReviewGroupProps) {
         <h2 className="text-sm font-bold tracking-tight text-foreground">
           {group.label}
         </h2>
-        <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium tabular-nums text-muted-foreground">
+        <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium tabular-nums text-secondary-foreground">
           {group.reviews.length}
         </span>
         <div className="h-px flex-1 bg-border/60" />

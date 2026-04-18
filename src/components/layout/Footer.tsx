@@ -2,18 +2,18 @@ export function Footer() {
   return (
     <footer className="relative z-10 mt-16 border-t border-border/40">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-5">
-        <p className="text-xs text-muted-foreground/60">
-          © {new Date().getFullYear()} ItayReview. All rights reserved.
+        <p className="text-xs text-muted-foreground">
+          © {new Date().getFullYear()} ItayReviews. All rights reserved.
         </p>
 
         <a
           href="https://itaycode.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-1.5 text-xs text-muted-foreground/60 transition-colors hover:text-foreground"
+          className="group inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
           <span>Created by</span>
-          <span className="font-semibold text-primary/80 underline-offset-2 group-hover:text-primary group-hover:underline transition-colors">
+          <span className="font-semibold text-foreground underline-offset-2 group-hover:underline transition-colors">
             itaycode.com
           </span>
           <svg

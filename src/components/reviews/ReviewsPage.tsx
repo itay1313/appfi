@@ -55,7 +55,7 @@ export function ReviewsPage() {
     <>
       <Hero />
       {/* ── Fix: <div> not <main> — App.tsx already renders the <main> wrapper ── */}
-      <div className="mx-auto w-full max-w-5xl px-6 py-8">
+      <div className="mx-auto w-full max-w-5xl px-6 py-8" style={{ contentVisibility: "auto", containIntrinsicSize: "auto 800px" }}>
 
         {/* Insights panel */}
         <InsightsBar stats={stats} reviews={reviews} />

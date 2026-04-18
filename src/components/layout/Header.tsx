@@ -32,14 +32,16 @@ export function Header() {
           {/* Brand text */}
           <div className="flex flex-col">
             <span className="text-lg font-extrabold leading-tight tracking-tight text-foreground">
-              ItayReview
+              ItayReviews
             </span>
           </div>
         </Link>
 
         <div className="flex items-center gap-1">
           <Link
-            to="/top-apps"
+            to="https://itaycode.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <LayoutGrid className="size-3.5" aria-hidden="true" />
