@@ -41,19 +41,19 @@ function StatTile({ icon, label, rawValue, format, sub, isLoading, valueClassNam
 
   return (
     <div className="flex flex-col gap-1.5 rounded-xl border border-border/50 bg-card px-4 py-3.5 shadow-xs">
-      <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
         {icon}
         {label}
       </div>
       {isLoading ? (
         <Skeleton className="h-7 w-24" />
       ) : (
-        <p className={cn("text-[1.6rem] font-extrabold leading-none tabular-nums tracking-tight", valueClassName)}>
+        <p className={cn("text-2xl font-extrabold leading-none tabular-nums tracking-tight", valueClassName)}>
           {format(animated)}
         </p>
       )}
       {sub && (
-        <p className="text-[11px] text-muted-foreground">{sub}</p>
+        <p className="text-xs text-muted-foreground">{sub}</p>
       )}
     </div>
   );
@@ -84,10 +84,10 @@ function DistRow({ stars, percent, total, isLoading }: DistRowProps) {
           style={{ width: isLoading ? "0%" : `${percent}%` }}
         />
       </div>
-      <span className="w-11 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground">
+      <span className="w-11 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
         {isLoading ? "—" : `${percent.toFixed(1)}%`}
       </span>
-      <span className="hidden w-16 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground/50 sm:block">
+      <span className="hidden w-16 shrink-0 text-right text-xs tabular-nums text-muted-foreground sm:block">
         {isLoading ? "" : total.toLocaleString()}
       </span>
     </div>
@@ -105,6 +105,8 @@ function TopLanguagesCard({ reviews }: { reviews: Review[] }) {
     }
     return Object.entries(counts)
       .sort(([, a], [, b]) => b - a)
+      // Only show languages we have a proper name for (filters out obscure codes like "an")
+      .filter(([lang]) => languageName(lang) !== lang.toUpperCase())
       .slice(0, 5);
   }, [reviews]);
 
@@ -114,8 +116,8 @@ function TopLanguagesCard({ reviews }: { reviews: Review[] }) {
 
   return (
     <div className="rounded-xl border border-border/50 bg-card px-5 py-4 shadow-xs">
-      <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-        Top Languages <span className="ml-1 font-normal normal-case opacity-50">(loaded reviews)</span>
+      <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        Top Languages <span className="ml-1 font-normal normal-case">(loaded reviews)</span>
       </p>
       <div className="space-y-2">
         {topLangs.map(([lang, count]) => {
@@ -124,7 +126,7 @@ function TopLanguagesCard({ reviews }: { reviews: Review[] }) {
             <div key={lang} className="flex items-center gap-2.5">
               <div className="flex w-24 shrink-0 items-center gap-1.5">
                 <span className="text-base leading-none">{languageFlag(lang)}</span>
-                <span className="text-xs font-medium text-foreground/80 truncate">
+                <span className="text-xs font-medium text-foreground truncate">
                   {languageName(lang)}
                 </span>
               </div>
@@ -134,7 +136,7 @@ function TopLanguagesCard({ reviews }: { reviews: Review[] }) {
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className="w-10 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground">
+              <span className="w-10 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
                 {pct.toFixed(1)}%
               </span>
             </div>
@@ -199,7 +201,7 @@ export function InsightsBar({ stats, reviews }: InsightsBarProps) {
       <div className="grid gap-3 sm:grid-cols-2">
         {/* Distribution */}
         <div className="rounded-xl border border-border/50 bg-card px-5 py-4 shadow-xs">
-          <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Rating Distribution
           </p>
           <div className="space-y-2">

@@ -106,7 +106,6 @@ export function ReviewModal({ review, children }: ReviewModalProps) {
     <Dialog>
       <DialogTrigger
         className="block w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 rounded-2xl"
-        render={<div />}
       >
         {children}
       </DialogTrigger>
@@ -131,7 +130,7 @@ export function ReviewModal({ review, children }: ReviewModalProps) {
               </div>
             </div>
 
-            <DialogTitle className="text-[1.35rem] leading-tight">
+            <DialogTitle className="text-xl leading-tight">
               {review.title || "Untitled Review"}
             </DialogTitle>
 
@@ -183,7 +182,7 @@ export function ReviewModal({ review, children }: ReviewModalProps) {
 
           {/* ── Body (scrollable) ── */}
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
-            <DialogDescription className="text-[14.5px] leading-relaxed text-foreground/80 whitespace-pre-wrap">
+            <DialogDescription className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap">
               {review.review || "No review body."}
             </DialogDescription>
 
