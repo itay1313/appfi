@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="font-src 'self' data:;" />
 
     <!-- Primary -->
     <title>ItayReviews - ChatGPT iOS Reviews Explorer</title>
@@ -47,19 +48,25 @@
       "operatingSystem": "Web"
     }
     </script>
-    <!-- Blocking theme script — runs synchronously before first paint to prevent flash -->
+    <!-- Blocking script — theme + lang guard, runs synchronously before first paint -->
     <script>
       (function () {
+        var d = document.documentElement;
+        d.lang = 'en';
         try {
           var t = localStorage.getItem('theme');
           if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          if (t === 'dark') document.documentElement.classList.add('dark');
+          if (t === 'dark') d.classList.add('dark');
         } catch (e) {}
       })();
     </script>
   </head>
   <body>
-    <script>document.documentElement.lang="en";</script>
+    <script>
+      new MutationObserver(function(m) {
+        if (!document.documentElement.lang) document.documentElement.lang = 'en';
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
