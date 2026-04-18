@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="relative z-10 mt-16 border-t border-border/40">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-5">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-5 flex-col md:flex-row">
         <p className="text-xs text-muted-foreground">
           © {new Date().getFullYear()} ItayReviews. All rights reserved.
         </p>
