@@ -24,6 +24,7 @@ export function LoadMoreButton({
         variant="outline"
         onClick={onClick}
         disabled={isLoading}
+        aria-busy={isLoading}
         className="h-11 rounded-xl px-8 text-sm font-medium shadow-xs"
       >
         {isLoading ? (

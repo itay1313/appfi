@@ -8,9 +8,10 @@ interface StarRatingProps {
 
 export function StarRating({ rating, size = "md" }: StarRatingProps) {
   const iconSize = size === "sm" ? "size-3.5" : "size-4";
+  const safeRating = Number.isFinite(rating) ? Math.max(0, Math.min(5, Math.round(rating))) : 0;
 
   return (
-    <div className="flex items-center gap-0.5" role="img" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-0.5" role="img" aria-label={`${safeRating} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
@@ -18,7 +19,7 @@ export function StarRating({ rating, size = "md" }: StarRatingProps) {
           className={cn(
             iconSize,
             "transition-colors",
-            i < rating
+            i < safeRating
               ? "fill-star text-star"
               : "fill-muted text-muted"
           )}

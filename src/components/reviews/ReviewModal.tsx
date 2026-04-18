@@ -1,5 +1,5 @@
 import { ExternalLink, Copy, Check, Globe } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Star } from "lucide-react";
 import {
   Dialog,
@@ -24,8 +24,10 @@ function formatDate(dateStr: string): string {
 }
 
 function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const days = Math.floor(diff / 86_400_000);
+  const time = new Date(dateStr).getTime();
+  if (Number.isNaN(time)) return "Unknown date";
+  const days = Math.floor((Date.now() - time) / 86_400_000);
+  if (days < 0) return "Today";
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 7) return `${days} days ago`;
@@ -35,15 +37,16 @@ function timeAgo(dateStr: string): string {
 }
 
 function BigStars({ rating }: { rating: number }) {
+  const safe = Number.isFinite(rating) ? Math.max(0, Math.min(5, Math.round(rating))) : 0;
   return (
-    <div className="flex items-center gap-1" role="img" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-1" role="img" aria-label={`${safe} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
           aria-hidden="true"
           className={cn(
             "size-5 transition-colors",
-            i < rating ? "fill-star text-star" : "fill-muted text-muted"
+            i < safe ? "fill-star text-star" : "fill-muted text-muted"
           )}
         />
       ))}
@@ -53,13 +56,14 @@ function BigStars({ rating }: { rating: number }) {
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timerRef.current), []);
   const copy = () => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    }).catch(() => {
-      // Clipboard unavailable (non-HTTPS, permission denied) — fail silently.
-    });
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setCopied(false), 1800);
+    }).catch(() => {});
   };
   return (
     <button

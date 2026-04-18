@@ -54,9 +54,9 @@ export async function fetchReviews(
   let response: Response;
   try {
     response = await fetch(url, { signal });
-  } catch (err) {
+  } catch (err: unknown) {
+    if (signal?.aborted) throw err;
     if (err instanceof DOMException && err.name === "AbortError") throw err;
-    // Network / DNS / CORS failures surface here.
     throw new Error("Network error. Please check your connection and try again.");
   }
 
@@ -69,11 +69,16 @@ export async function fetchReviews(
     );
   }
 
-  const body = (await response.json()) as ReviewsResponse;
-  // Defensive: make sure the shape looks right. If the proxy ever changes
-  // we degrade to an error the UI can render instead of crashing downstream.
-  if (!body || !Array.isArray(body.reviews)) {
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    throw new Error("Received an invalid response from the server.");
+  }
+
+  const data = body as ReviewsResponse;
+  if (!data || !Array.isArray(data.reviews)) {
     throw new Error("Received an unexpected response from the server.");
   }
-  return body;
+  return data;
 }
