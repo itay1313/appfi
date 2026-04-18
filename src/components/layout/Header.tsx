@@ -1,4 +1,4 @@
-import { Sun, Moon, Monitor, LayoutGrid } from "lucide-react";
+import { Sun, Moon, Monitor } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/use-theme";
 import {
@@ -44,7 +44,6 @@ export function Header() {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            <LayoutGrid className="size-3.5" aria-hidden="true" />
             Top Apps
           </Link>
 

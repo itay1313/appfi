@@ -1,4 +1,4 @@
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ReviewStats, StarDistItem } from "@/hooks/use-review-stats";
 import { languageFlag, languageName } from "@/lib/languages";
