@@ -41,19 +41,19 @@ export function ReviewCard({ review }: ReviewCardProps) {
           <div className="mb-3 flex items-start justify-between gap-3">
             <div className="flex-1 space-y-1.5">
               <StarRating rating={stars} size="sm" />
-              <h3 className="text-[15px] font-bold leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary">
+              <h3 className="text-base font-bold leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary">
                 {review.title || "No title"}
               </h3>
             </div>
           </div>
 
           {review.review && (
-            <p className="mb-4 line-clamp-3 text-[13.5px] leading-relaxed text-muted-foreground">
+            <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
               {review.review}
             </p>
           )}
 
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="font-medium text-muted-foreground">{review.author}</span>
             <span className="text-border">·</span>
             <time dateTime={review.date}>{formatDate(review.date)}</time>

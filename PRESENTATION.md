@@ -1,4 +1,4 @@
-# ItayReview — Complete Technical Reference
+# ItayReviews — Complete Technical Reference
 
 > Everything you need to know to walk through this project confidently in a presentation or interview.
 

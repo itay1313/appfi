@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { fetchReviews } from "@/api/reviews";
 
 const STARS = [1, 2, 3, 4, 5] as const;
@@ -26,6 +27,16 @@ export interface ReviewStats {
  * Results are cached for 5 minutes so subsequent page navigations are free.
  */
 export function useReviewStats(): ReviewStats {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof requestIdleCallback !== "undefined") {
+      const id = requestIdleCallback(() => setEnabled(true));
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(() => setEnabled(true), 150);
+    return () => clearTimeout(id);
+  }, []);
+
   const queries = useQueries({
     queries: STARS.map((stars) => ({
       queryKey: ["review-stats", stars] as const,
@@ -33,6 +44,7 @@ export function useReviewStats(): ReviewStats {
         fetchReviews({ stars: String(stars), count: 1, page: 1 }, signal),
       staleTime: 5 * 60_000,
       gcTime:    10 * 60_000,
+      enabled,
     })),
   });
 

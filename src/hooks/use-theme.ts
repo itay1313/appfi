@@ -27,7 +27,9 @@ function getSystemTheme(): ResolvedTheme {
 
 function applyTheme(theme: Theme) {
   const resolved = theme === "system" ? getSystemTheme() : theme;
-  document.documentElement.classList.toggle("dark", resolved === "dark");
+  const root = document.documentElement;
+  root.classList.toggle("dark", resolved === "dark");
+  if (!root.lang) root.lang = "en";
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

@@ -213,7 +213,7 @@ export function SearchFilters({
           className={cn(
             "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-all",
             !activeRating
-              ? "border-primary/30 bg-primary/10 text-primary shadow-sm"
+              ? "border-primary/30 bg-primary/10 text-foreground shadow-sm"
               : "border-border/60 bg-surface-elevated text-muted-foreground hover:border-border hover:text-foreground"
           )}
         >
