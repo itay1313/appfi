@@ -18,8 +18,9 @@ interface State {
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { error: null };
 
-  static getDerivedStateFromError(error: Error): State {
-    return { error };
+  static getDerivedStateFromError(error: unknown): State {
+    if (error instanceof Error) return { error };
+    return { error: new Error(String(error)) };
   }
 
   componentDidCatch(error: Error, info: { componentStack?: string }) {
@@ -36,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (!this.state.error) return this.props.children;
 
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-background p-6">
+      <div role="alert" className="flex min-h-dvh items-center justify-center bg-background p-6">
         <div className="max-w-md space-y-4 text-center">
           <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
             <AlertTriangle className="size-7 text-destructive" />

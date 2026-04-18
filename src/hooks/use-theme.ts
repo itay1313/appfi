@@ -32,10 +32,12 @@ function applyTheme(theme: Theme) {
   if (!root.lang) root.lang = "en";
 }
 
+const VALID_THEMES: ReadonlySet<string> = new Set(["light", "dark", "system"]);
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem("theme") as Theme | null;
-    return stored ?? "system";
+    const stored = localStorage.getItem("theme");
+    return stored && VALID_THEMES.has(stored) ? (stored as Theme) : "system";
   });
 
   const setTheme = useCallback((next: Theme) => {

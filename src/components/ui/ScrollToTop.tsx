@@ -6,6 +6,7 @@ export function ScrollToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    setVisible(window.scrollY > THRESHOLD);
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;

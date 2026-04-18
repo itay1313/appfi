@@ -99,7 +99,8 @@ export const DotField = memo(function DotField({
     const canvas = canvasRef.current;
     const glowEl = glowRef.current;
     if (!canvas || !container) return;
-    const ctx = canvas.getContext("2d", { alpha: true })!;
+    const ctx = canvas.getContext("2d", { alpha: true }) as CanvasRenderingContext2D;
+    if (!ctx) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     let cachedGrad: CanvasGradient | null = null;
@@ -204,10 +205,7 @@ export const DotField = memo(function DotField({
       const len = dots.length;
       const t = frameCount * 0.02;
 
-      if (len === 0) {
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
+      if (len === 0) return;
 
       const targetEngagement = Math.min(m.speed / 5, 1);
       engagement.current += (targetEngagement - engagement.current) * 0.06;
@@ -253,7 +251,7 @@ export const DotField = memo(function DotField({
         const distSq = dx * dx + dy * dy;
 
         if (distSq < crSq && eng > 0.01) {
-          const dist = Math.sqrt(distSq);
+          const dist = Math.sqrt(distSq) || 1;
           if (isBulge) {
             const frac = 1 - dist / cr;
             const push = frac * frac * p.bulgeStrength * eng;
@@ -346,8 +344,13 @@ export const DotField = memo(function DotField({
     );
     io.observe(container);
 
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let cancelIdle: () => void;
-    if (typeof requestIdleCallback !== "undefined") {
+
+    if (prefersReduced.matches) {
+      drawStaticFrame();
+      cancelIdle = () => {};
+    } else if (typeof requestIdleCallback !== "undefined") {
       const idleId = requestIdleCallback(startAnimation);
       cancelIdle = () => cancelIdleCallback(idleId);
     } else {
@@ -355,12 +358,19 @@ export const DotField = memo(function DotField({
       cancelIdle = () => clearTimeout(timerId);
     }
 
+    const onMotionPrefChange = (e: MediaQueryListEvent) => {
+      if (e.matches) { pauseAnimation(); drawStaticFrame(); }
+      else startAnimation();
+    };
+    prefersReduced.addEventListener("change", onMotionPrefChange);
+
     return () => {
       pauseAnimation();
       clearInterval(speedInterval);
       cancelIdle();
       ro.disconnect();
       io.disconnect();
+      prefersReduced.removeEventListener("change", onMotionPrefChange);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("mousemove", onMouseMove);
     };

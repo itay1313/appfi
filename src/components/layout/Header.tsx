@@ -38,14 +38,14 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-1">
-          <Link
-            to="https://itaycode.com"
+          <a
+            href="https://itaycode.com"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             Let's Work Together
-          </Link>
+          </a>
 
           <DropdownMenu>
           <DropdownMenuTrigger className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
