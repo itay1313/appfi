@@ -1,6 +1,6 @@
-import { Star, TrendingUp, AlertTriangle, MessageSquare } from "lucide-react";
+import { Star, TrendingUp, AlertTriangle, MessageSquare, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ReviewStats } from "@/hooks/use-review-stats";
+import type { ReviewStats, StarDistItem } from "@/hooks/use-review-stats";
 import { languageFlag, languageName } from "@/lib/languages";
 import type { Review } from "@/types/review";
 import { useMemo } from "react";
@@ -171,17 +171,87 @@ function TopLanguagesCard({ reviews, isLoading }: { reviews: Review[]; isLoading
 
 interface InsightsBarProps {
   stats: ReviewStats;
-  /** Currently loaded reviews — used for language breakdown */
-  reviews: Review[];
+  /** All loaded reviews after client-side filters (lang, etc.) */
+  filteredReviews: Review[];
+  /** API-level total for current query+stars filters (not lang) */
+  apiTotal: number;
+  /** Any filter (stars, lang, query) is currently active */
+  hasActiveFilters: boolean;
+  /** Lang filter specifically is active (client-side only, so total is partial) */
+  hasLangFilter: boolean;
   /** True while the first page of reviews is still loading */
   isReviewsLoading: boolean;
 }
 
-export function InsightsBar({ stats, reviews, isReviewsLoading }: InsightsBarProps) {
-  const { isLoading, grandTotal, averageRating, satisfactionPercent, criticalPercent, distribution } = stats;
+/** Derive stats from the currently loaded+filtered reviews. */
+function computeStatsFromReviews(
+  reviews: Review[],
+  apiTotal: number,
+  hasLangFilter: boolean,
+): ReviewStats {
+  const starCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  for (const r of reviews) {
+    const s = Math.round(Number(r.stars));
+    if (s >= 1 && s <= 5) starCounts[s]++;
+  }
+  const n = reviews.length;
+  const weightedSum = [1, 2, 3, 4, 5].reduce((acc, s) => acc + s * starCounts[s], 0);
+  const avg = n > 0 ? weightedSum / n : 0;
+  const happy = starCounts[4] + starCounts[5];
+  const critical = starCounts[1];
+
+  // Lang is client-side: only count what's been loaded. Everything else is accurate from the API.
+  const grandTotal = hasLangFilter ? n : apiTotal;
+
+  const distribution: StarDistItem[] = [5, 4, 3, 2, 1].map((s) => ({
+    stars: s,
+    total: starCounts[s],
+    percent: n > 0 ? (starCounts[s] / n) * 100 : 0,
+  }));
+
+  return {
+    isLoading: false,
+    grandTotal,
+    averageRating: avg,
+    satisfactionPercent: n > 0 ? (happy / n) * 100 : 0,
+    criticalPercent: n > 0 ? (critical / n) * 100 : 0,
+    distribution,
+  };
+}
+
+export function InsightsBar({
+  stats,
+  filteredReviews,
+  apiTotal,
+  hasActiveFilters,
+  hasLangFilter,
+  isReviewsLoading,
+}: InsightsBarProps) {
+  // When filters are active, derive stats from the loaded+filtered reviews.
+  // Fall back to the global corpus stats when nothing is filtered.
+  const activeStats = useMemo(() => {
+    if (!hasActiveFilters || filteredReviews.length === 0) return null;
+    return computeStatsFromReviews(filteredReviews, apiTotal, hasLangFilter);
+  }, [filteredReviews, hasActiveFilters, hasLangFilter, apiTotal]);
+
+  const displayStats = activeStats ?? stats;
+  const { isLoading, grandTotal, averageRating, satisfactionPercent, criticalPercent, distribution } = displayStats;
+
+  // Sub-label for Total Reviews tile: clarify partial count when lang-filtered
+  const totalSub = hasActiveFilters && hasLangFilter ? "in loaded reviews" : undefined;
 
   return (
     <div className="mb-6 space-y-3">
+      {/* ── Filtered-view badge ──────────────────────────── */}
+      <div className="flex h-5 items-center justify-end">
+        {hasActiveFilters && activeStats && (
+          <span className="flex items-center gap-1 rounded-full border border-primary/30 bg-primary/8 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+            <SlidersHorizontal className="size-3" aria-hidden="true" />
+            Filtered view
+          </span>
+        )}
+      </div>
+
       {/* ── Stat tiles ──────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile
@@ -189,6 +259,7 @@ export function InsightsBar({ stats, reviews, isReviewsLoading }: InsightsBarPro
           label="Total Reviews"
           rawValue={grandTotal}
           format={(n) => Math.round(n).toLocaleString()}
+          sub={totalSub}
           isLoading={isLoading}
         />
         <StatTile
@@ -243,7 +314,7 @@ export function InsightsBar({ stats, reviews, isReviewsLoading }: InsightsBarPro
         </div>
 
         {/* Top Languages */}
-        <TopLanguagesCard reviews={reviews} isLoading={isReviewsLoading} />
+        <TopLanguagesCard reviews={filteredReviews} isLoading={isReviewsLoading} />
       </div>
     </div>
   );
