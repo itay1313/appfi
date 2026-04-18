@@ -29,8 +29,11 @@
     <meta name="twitter:title"       content="ItayReviews — ChatGPT iOS Reviews Explorer" />
     <meta name="twitter:description" content="Explore 346,000+ ChatGPT iOS App Store reviews. Search, filter, and discover trends instantly." />
 
+    <!-- Font preload — starts download immediately, before CSS is parsed -->
+    <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+
     <!-- Performance hints -->
-    <link rel="preconnect" href="https://appfigures.com" crossorigin />
+    <link rel="preconnect" href="https://appfigures.com" />
     <link rel="dns-prefetch" href="https://appfigures.com" />
 
     <!-- Structured data -->
@@ -43,6 +46,16 @@
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Web"
     }
+    </script>
+    <!-- Blocking theme script — runs synchronously before first paint to prevent flash -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          if (t === 'dark') document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
     </script>
   </head>
   <body>
