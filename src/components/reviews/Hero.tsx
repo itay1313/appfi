@@ -69,7 +69,7 @@ export function Hero() {
       {/* Bottom fade into page background */}
       <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-background to-transparent" />
 
-      <div className="relative z-10 flex flex-col items-center px-6 pb-16 pt-20 text-center sm:pb-20 sm:pt-28">
+      <div className="relative z-10 flex flex-col items-center px-6 py-16 text-center sm:py-20">
         <div
           className={`mb-6 rounded-2xl p-3 shadow-2xl backdrop-blur-sm ${
             isDark
